@@ -11,7 +11,7 @@
 
 <meta name="author" content="Manoj Maddali, MD" />
 
-<meta name="date" content="2024-05-15" />
+<meta name="date" content="2024-05-16" />
 
 <title>Impute Missing Values - WIDS</title>
 
@@ -352,7 +352,7 @@ display: none;
 
 <h1 class="title toc-ignore">Impute Missing Values - WIDS</h1>
 <h4 class="author">Manoj Maddali, MD</h4>
-<h4 class="date">2024-05-15</h4>
+<h4 class="date">2024-05-16</h4>
 
 </div>
 
@@ -436,7 +436,7 @@ features = c(&quot;patient_race&quot;, &quot;payer_type&quot;, &quot;patient_sta
               &quot;population_commute_time&quot;, &quot;population_health_uninsured_perc&quot;, &quot;population_veteran_perc&quot;,
               &quot;climate_ozone&quot;, &quot;climate_pm25&quot;, &quot;climate_n02&quot;)
 
-df = df %&gt;% select(features)</code></pre>
+df = df %&gt;% select(features, treatment_pd, allocated_set)</code></pre>
 <pre><code>## Warning: Using an external vector in selections was deprecated in tidyselect 1.1.0.
 ## ℹ Please use `all_of()` or `any_of()` instead.
 ##   # Was:
@@ -453,11 +453,11 @@ df = df %&gt;% select(features)</code></pre>
 <div id="summary-of-race-column-pre-imputation" class="section level1">
 <h1>Summary of race column pre imputation</h1>
 <pre class="r"><code>df %&gt;% select(patient_race) %&gt;% tbl_summary()</code></pre>
-<div id="mlaobdrvxv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="zuxnkyyutu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
-#mlaobdrvxv .gt_table {
+#zuxnkyyutu .gt_table {
 display: table;
 border-collapse: collapse;
 margin-left: auto;
@@ -481,7 +481,7 @@ border-left-style: none;
 border-left-width: 2px;
 border-left-color: #D3D3D3;
 }
-#mlaobdrvxv .gt_heading {
+#zuxnkyyutu .gt_heading {
 background-color: #FFFFFF;
 text-align: center;
 border-bottom-color: #FFFFFF;
@@ -492,11 +492,11 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#mlaobdrvxv .gt_caption {
+#zuxnkyyutu .gt_caption {
 padding-top: 4px;
 padding-bottom: 4px;
 }
-#mlaobdrvxv .gt_title {
+#zuxnkyyutu .gt_title {
 color: #333333;
 font-size: 125%;
 font-weight: initial;
@@ -507,7 +507,7 @@ padding-right: 5px;
 border-bottom-color: #FFFFFF;
 border-bottom-width: 0;
 }
-#mlaobdrvxv .gt_subtitle {
+#zuxnkyyutu .gt_subtitle {
 color: #333333;
 font-size: 85%;
 font-weight: initial;
@@ -518,12 +518,12 @@ padding-right: 5px;
 border-top-color: #FFFFFF;
 border-top-width: 0;
 }
-#mlaobdrvxv .gt_bottom_border {
+#zuxnkyyutu .gt_bottom_border {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#mlaobdrvxv .gt_col_headings {
+#zuxnkyyutu .gt_col_headings {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -537,7 +537,7 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#mlaobdrvxv .gt_col_heading {
+#zuxnkyyutu .gt_col_heading {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -556,7 +556,7 @@ padding-left: 5px;
 padding-right: 5px;
 overflow-x: hidden;
 }
-#mlaobdrvxv .gt_column_spanner_outer {
+#zuxnkyyutu .gt_column_spanner_outer {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -567,13 +567,13 @@ padding-bottom: 0;
 padding-left: 4px;
 padding-right: 4px;
 }
-#mlaobdrvxv .gt_column_spanner_outer:first-child {
+#zuxnkyyutu .gt_column_spanner_outer:first-child {
 padding-left: 0;
 }
-#mlaobdrvxv .gt_column_spanner_outer:last-child {
+#zuxnkyyutu .gt_column_spanner_outer:last-child {
 padding-right: 0;
 }
-#mlaobdrvxv .gt_column_spanner {
+#zuxnkyyutu .gt_column_spanner {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
@@ -584,7 +584,7 @@ overflow-x: hidden;
 display: inline-block;
 width: 100%;
 }
-#mlaobdrvxv .gt_group_heading {
+#zuxnkyyutu .gt_group_heading {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -609,7 +609,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 text-align: left;
 }
-#mlaobdrvxv .gt_empty_group_heading {
+#zuxnkyyutu .gt_empty_group_heading {
 padding: 0.5px;
 color: #333333;
 background-color: #FFFFFF;
@@ -623,13 +623,13 @@ border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 vertical-align: middle;
 }
-#mlaobdrvxv .gt_from_md > :first-child {
+#zuxnkyyutu .gt_from_md > :first-child {
 margin-top: 0;
 }
-#mlaobdrvxv .gt_from_md > :last-child {
+#zuxnkyyutu .gt_from_md > :last-child {
 margin-bottom: 0;
 }
-#mlaobdrvxv .gt_row {
+#zuxnkyyutu .gt_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -647,7 +647,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 overflow-x: hidden;
 }
-#mlaobdrvxv .gt_stub {
+#zuxnkyyutu .gt_stub {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -659,7 +659,7 @@ border-right-color: #D3D3D3;
 padding-left: 5px;
 padding-right: 5px;
 }
-#mlaobdrvxv .gt_stub_row_group {
+#zuxnkyyutu .gt_stub_row_group {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -672,10 +672,10 @@ padding-left: 5px;
 padding-right: 5px;
 vertical-align: top;
 }
-#mlaobdrvxv .gt_row_group_first td {
+#zuxnkyyutu .gt_row_group_first td {
 border-top-width: 2px;
 }
-#mlaobdrvxv .gt_summary_row {
+#zuxnkyyutu .gt_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -684,14 +684,14 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#mlaobdrvxv .gt_first_summary_row {
+#zuxnkyyutu .gt_first_summary_row {
 border-top-style: solid;
 border-top-color: #D3D3D3;
 }
-#mlaobdrvxv .gt_first_summary_row.thick {
+#zuxnkyyutu .gt_first_summary_row.thick {
 border-top-width: 2px;
 }
-#mlaobdrvxv .gt_last_summary_row {
+#zuxnkyyutu .gt_last_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -700,7 +700,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#mlaobdrvxv .gt_grand_summary_row {
+#zuxnkyyutu .gt_grand_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -709,7 +709,7 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#mlaobdrvxv .gt_first_grand_summary_row {
+#zuxnkyyutu .gt_first_grand_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -718,10 +718,10 @@ border-top-style: double;
 border-top-width: 6px;
 border-top-color: #D3D3D3;
 }
-#mlaobdrvxv .gt_striped {
+#zuxnkyyutu .gt_striped {
 background-color: rgba(128, 128, 128, 0.05);
 }
-#mlaobdrvxv .gt_table_body {
+#zuxnkyyutu .gt_table_body {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -729,7 +729,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#mlaobdrvxv .gt_footnotes {
+#zuxnkyyutu .gt_footnotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -742,7 +742,7 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#mlaobdrvxv .gt_footnote {
+#zuxnkyyutu .gt_footnote {
 margin: 0px;
 font-size: 90%;
 padding-left: 4px;
@@ -750,7 +750,7 @@ padding-right: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#mlaobdrvxv .gt_sourcenotes {
+#zuxnkyyutu .gt_sourcenotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -763,58 +763,58 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#mlaobdrvxv .gt_sourcenote {
+#zuxnkyyutu .gt_sourcenote {
 font-size: 90%;
 padding-top: 4px;
 padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#mlaobdrvxv .gt_left {
+#zuxnkyyutu .gt_left {
 text-align: left;
 }
-#mlaobdrvxv .gt_center {
+#zuxnkyyutu .gt_center {
 text-align: center;
 }
-#mlaobdrvxv .gt_right {
+#zuxnkyyutu .gt_right {
 text-align: right;
 font-variant-numeric: tabular-nums;
 }
-#mlaobdrvxv .gt_font_normal {
+#zuxnkyyutu .gt_font_normal {
 font-weight: normal;
 }
-#mlaobdrvxv .gt_font_bold {
+#zuxnkyyutu .gt_font_bold {
 font-weight: bold;
 }
-#mlaobdrvxv .gt_font_italic {
+#zuxnkyyutu .gt_font_italic {
 font-style: italic;
 }
-#mlaobdrvxv .gt_super {
+#zuxnkyyutu .gt_super {
 font-size: 65%;
 }
-#mlaobdrvxv .gt_footnote_marks {
+#zuxnkyyutu .gt_footnote_marks {
 font-style: italic;
 font-weight: normal;
 font-size: 75%;
 vertical-align: 0.4em;
 }
-#mlaobdrvxv .gt_asterisk {
+#zuxnkyyutu .gt_asterisk {
 font-size: 100%;
 vertical-align: 0;
 }
-#mlaobdrvxv .gt_indent_1 {
+#zuxnkyyutu .gt_indent_1 {
 text-indent: 5px;
 }
-#mlaobdrvxv .gt_indent_2 {
+#zuxnkyyutu .gt_indent_2 {
 text-indent: 10px;
 }
-#mlaobdrvxv .gt_indent_3 {
+#zuxnkyyutu .gt_indent_3 {
 text-indent: 15px;
 }
-#mlaobdrvxv .gt_indent_4 {
+#zuxnkyyutu .gt_indent_4 {
 text-indent: 20px;
 }
-#mlaobdrvxv .gt_indent_5 {
+#zuxnkyyutu .gt_indent_5 {
 text-indent: 25px;
 }
 </style>
@@ -854,7 +854,8 @@ text-indent: 25px;
 <div id="impute-missing-values-using-mice-with-random-forest" class="section level1">
 <h1>Impute missing values using MICE with random forest</h1>
 <pre class="r"><code># Impute missing values using MICE with random forest - stochastic method rather than linear due to imbalance of race category
-df_imputed = mice(df, method = &quot;rf&quot;, seed = 123) %&gt;% complete()</code></pre>
+# Impute using all the available data (train/test set)
+df_imputed = mice(df %&gt;% select(-treatment_pd, -allocated_set), method = &quot;rf&quot;, seed = 123) %&gt;% complete()</code></pre>
 <pre><code>## 
 ##  iter imp variable
 ##   1   1  patient_race  payer_type  patient_state  patient_bmi  patient_region  patient_division  population_family_size  population_family_dual_income_perc  population_income_household_median  population_home_ownership_perc  population_home_value  population_rent_median  population_rent_burden_perc  population_unemployment_rate  population_self_employed_perc  population_farmer_perc  population_disabled_perc  population_poverty_perc  population_limited_english_perc  population_commute_time  population_health_uninsured_perc  climate_ozone  climate_pm25  climate_n02
@@ -883,6 +884,8 @@ df_imputed = mice(df, method = &quot;rf&quot;, seed = 123) %&gt;% complete()</co
 ##   5   4  patient_race  payer_type  patient_state  patient_bmi  patient_region  patient_division  population_family_size  population_family_dual_income_perc  population_income_household_median  population_home_ownership_perc  population_home_value  population_rent_median  population_rent_burden_perc  population_unemployment_rate  population_self_employed_perc  population_farmer_perc  population_disabled_perc  population_poverty_perc  population_limited_english_perc  population_commute_time  population_health_uninsured_perc  climate_ozone  climate_pm25  climate_n02
 ##   5   5  patient_race  payer_type  patient_state  patient_bmi  patient_region  patient_division  population_family_size  population_family_dual_income_perc  population_income_household_median  population_home_ownership_perc  population_home_value  population_rent_median  population_rent_burden_perc  population_unemployment_rate  population_self_employed_perc  population_farmer_perc  population_disabled_perc  population_poverty_perc  population_limited_english_perc  population_commute_time  population_health_uninsured_perc  climate_ozone  climate_pm25  climate_n02</code></pre>
 <pre><code>## Warning: Number of logged events: 601</code></pre>
+<pre class="r"><code># Add back outcome variable and allocated set
+df_imputed = df_imputed %&gt;% bind_cols(df %&gt;% select(treatment_pd, allocated_set))</code></pre>
 </div>
 <div id="summary-of-race-column-post-imputation" class="section level1">
 <h1>Summary of race column post imputation</h1>

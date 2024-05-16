@@ -91,7 +91,7 @@ features = c("patient_race", "payer_type", "patient_state", "patient_age", "pati
               "population_commute_time", "population_health_uninsured_perc", "population_veteran_perc",
               "climate_ozone", "climate_pm25", "climate_n02")
 
-df = df %>% select(features)
+df = df %>% select(features, treatment_pd, allocated_set)
 ```
 
 # Summary of race column pre imputation
@@ -102,7 +102,11 @@ df %>% select(patient_race) %>% tbl_summary()
 # Impute missing values using MICE with random forest
 ``` {r}
 # Impute missing values using MICE with random forest - stochastic method rather than linear due to imbalance of race category
-df_imputed = mice(df, method = "rf", seed = 123) %>% complete()
+# Impute using all the available data (train/test set)
+df_imputed = mice(df %>% select(-treatment_pd, -allocated_set), method = "rf", seed = 123) %>% complete()
+
+# Add back outcome variable and allocated set
+df_imputed = df_imputed %>% bind_cols(df %>% select(treatment_pd, allocated_set))
 ```
 
 # Summary of race column post imputation
