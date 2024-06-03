@@ -1,0 +1,117 @@
+---
+title: "Impute Missing Values - WIDS"
+author: "Manoj Maddali, MD"
+date: "`r Sys.Date()`"
+output:
+  html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(gtsummary)
+library(mice)
+```
+
+# Load the dataset
+``` {r}
+df = read_csv("./Data/train_test_added_climate_data.csv", show_col_types = FALSE) %>%
+        rename(patient_bmi = bmi,
+               patient_region = region,
+               patient_division = division,
+               patient_tumor_side = side,
+               patient_tumor_quadrant = quadrant,
+               patient_metastatic_organ = metastatic_organ,
+               patient_metastatic_first_treatment = cleaned_metastatic_first_treatment,
+               patient_metastatic_first_treatment_type = cleaned_metastatic_first_treatment_type,
+               population_size = population,
+               population_density = density,
+               population_age_median = age_median,
+               population_female_perc = female,
+               population_married_perc = married,
+               population_divorced_perc = divorced,
+               population_never_married_perc = never_married,
+               population_widowed_perc = widowed,
+               population_family_size = family_size,
+               population_family_dual_income_perc = family_dual_income,
+               population_income_individual_median = income_individual_median,
+               population_income_household_median = income_household_median,
+               population_home_ownership_perc = home_ownership,
+               population_home_value = home_value,
+               population_rent_median = rent_median,
+               population_rent_burden_perc = rent_burden,
+               population_education_less_highschool_perc = education_less_highschool,
+               population_education_highschool_perc = education_highschool,
+               population_education_some_college_perc = education_some_college,
+               population_education_bachelors_perc = education_bachelors,
+               population_education_graduate_perc = education_graduate,
+               population_education_college_or_above_perc = education_college_or_above,
+               population_education_stem_degree_perc = education_stem_degree,
+               population_unemployment_rate = unemployment_rate,
+               population_self_employed_perc = self_employed,
+               population_farmer_perc = farmer,
+               population_race_white_perc = race_white,
+               population_race_black_perc = race_black,
+               population_race_asian_perc = race_asian,
+               population_race_native_american_perc = race_native,
+               population_race_pacific_islander_perc = race_pacific,
+               population_race_other_perc = race_other,
+               population_race_multiple_perc = race_multiple,
+               population_hispanic_perc = hispanic,
+               population_disabled_perc = disabled,
+               population_poverty_perc = poverty,
+               population_limited_english_perc = limited_english,
+               population_commute_time = commute_time,
+               population_health_uninsured_perc = health_uninsured,
+               population_veteran_perc = veteran,
+               climate_ozone = Ozone,
+               climate_pm25 = PM25,
+               climate_n02 = N02) %>%
+    mutate(across(c("patient_race", "payer_type", "patient_state", "patient_zip3", 
+                    "patient_gender", "patient_region", "patient_division", 
+                    "patient_tumor_side", "patient_tumor_quadrant",
+                    "patient_metastatic_organ", "patient_metastatic_first_treatment",
+                    "patient_metastatic_first_treatment_type"), as.factor))
+
+features = c("patient_race", "payer_type", "patient_state", "patient_age", "patient_gender", "patient_bmi",
+              "patient_region", "patient_division", "patient_tumor_side", "patient_tumor_quadrant",
+              "patient_metastatic_organ", "patient_metastatic_first_treatment", "patient_metastatic_first_treatment_type",
+              "population_size", "population_density", "population_age_median", "population_female_perc",
+              "population_married_perc", "population_divorced_perc", "population_never_married_perc",
+              "population_widowed_perc", "population_family_size", "population_family_dual_income_perc",
+              "population_income_individual_median", "population_income_household_median", "population_home_ownership_perc",
+              "population_home_value", "population_rent_median", "population_rent_burden_perc",
+              "population_education_less_highschool_perc", "population_education_highschool_perc",
+              "population_education_some_college_perc", "population_education_bachelors_perc",
+              "population_education_graduate_perc", "population_education_college_or_above_perc",
+              "population_education_stem_degree_perc", "population_unemployment_rate", "population_self_employed_perc",
+              "population_farmer_perc", "population_race_white_perc", "population_race_black_perc",
+              "population_race_asian_perc", "population_race_native_american_perc", "population_race_pacific_islander_perc",
+              "population_race_other_perc", "population_race_multiple_perc", "population_hispanic_perc",
+              "population_disabled_perc", "population_poverty_perc", "population_limited_english_perc",
+              "population_commute_time", "population_health_uninsured_perc", "population_veteran_perc",
+              "climate_ozone", "climate_pm25", "climate_n02")
+
+df = df %>% select(features, treatment_pd, allocated_set)
+```
+
+# Summary of race column pre imputation
+``` {r}
+df %>% select(patient_race) %>% tbl_summary()
+```
+
+# Impute missing values using MICE with random forest
+``` {r}
+# Impute missing values using MICE with random forest - stochastic method rather than linear due to imbalance of race category
+# Impute using all the available data (train/test set)
+df_imputed = mice(df %>% select(-treatment_pd, -allocated_set), method = "rf", seed = 123) %>% complete()
+
+# Add back outcome variable and allocated set
+df_imputed = df_imputed %>% bind_cols(df %>% select(treatment_pd, allocated_set))
+```
+
+# Summary of race column post imputation
+``` {r}
+df_imputed %>% select(patient_race) %>% tbl_summary()
+
+write_csv(df_imputed, "./Data/train_test_added_climate_data_imputed.csv")
+```
